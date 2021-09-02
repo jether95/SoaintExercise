@@ -1,5 +1,6 @@
 package com.examenFinal.Ejercicio2.Ejercicio2Application.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -21,22 +22,29 @@ public class EstudianteService {
 
 		Estudiante estudiante = new Estudiante();
 		
-		estudiante.setNombre( payload.getNombre() );
-		estudiante.setNumeroIdentificacion( payload.getNumero() );
-		estudiante.setCorreo(payload.getCorreo());
-		estudiante.setEdad(payload.getEdad());
+		if(payload.getEdad() < 18) {
+			System.out.print("debe ser mayor a 18");
+		}
+		else {
+			estudiante.setNombre( payload.getNombre() );
+			estudiante.setNumeroIdentificacion( payload.getNumero() );
+			estudiante.setCorreo(payload.getCorreo());
+			estudiante.setEdad(payload.getEdad());
+			estudiante.setEstado(true);
+			
+			 
+			List<Acudiente> acudientes = payload.getAcudiente().stream()
+					.map(acudiente-> Acudiente.builder()
+							.nombre(acudiente.getNombre())
+							.parentesco(acudiente.getParentesco())
+							.telefono(acudiente.getTelefono())
+							.estudiante(estudiante).build()
+							).collect(Collectors.toList());
+			
+			estudiante.setAcudiente(acudientes);
+			estRespository.save(estudiante);
+		}
 		
-		List<Acudiente> acudientes = payload.getAcudiente().stream()
-				.map(acudiente-> Acudiente.builder()
-						.nombre(acudiente.getNombre())
-						.parentesco(acudiente.getParentesco())
-						.telefono(acudiente.getTelefono())
-						.estudiante(estudiante).build()
-						).collect(Collectors.toList());
-		
-		estudiante.setAcudiente(acudientes);
-		
-		estRespository.save(estudiante);
 		return estudiante;
 	}
 	
@@ -44,6 +52,13 @@ public class EstudianteService {
 		List<Estudiante> listaEstudiante = estRespository.findAll();
 		return listaEstudiante;
 	}
+	
+	public List<Estudiante> estudiantePorEdad(int edad, boolean estado){
+		return estRespository.findByEdadAndEstado(edad, estado);
+		
+		
+	}
+	
 	
 	public Estudiante searchEst(Long id) {
 		Estudiante estudiante = new Estudiante();
@@ -66,4 +81,13 @@ public class EstudianteService {
 		
 		return estudiante;
 	}
+	
+	public Estudiante eliminarEstudiante(long id, EstudianteRequest payload) {
+		Estudiante estudiante = estRespository.findById(id).get();
+		estudiante.setEstado(false);
+		estRespository.save(estudiante);
+		
+		return estudiante;
+	}
+		
 }

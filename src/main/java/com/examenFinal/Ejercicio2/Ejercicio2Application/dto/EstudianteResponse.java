@@ -9,5 +9,5 @@ public class EstudianteResponse {
 	private String numeroIdentificacion;
 	private String correo;
 	private int edad;
-	private boolean estadoActivo;
+	private boolean estado;
 }

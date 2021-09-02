@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,12 @@ public class EstudianteController {
 		
 	}
 	
+	@GetMapping( value = "estudiante/estudiantePorEdad/{edad}/{estado}")
+	public ResponseEntity<List<EstudianteResponse>> listarEstudiantePorEdad(@PathVariable int edad,@PathVariable boolean estado){
+		List<Estudiante> listaPorEdad = estService.estudiantePorEdad(edad, estado);
+		return new ResponseEntity<>(convertidor.convertirEntidad(listaPorEdad), HttpStatus.OK);
+	}
+	
 	
 	@PostMapping(value = "estudiante")
 	public ResponseEntity<EstudianteResponse> crearEstudiante(@RequestBody EstudianteRequest payload) {
@@ -49,6 +56,18 @@ public class EstudianteController {
 	@GetMapping(value = "estudiante/buscar/{id}")
 	public ResponseEntity<Estudiante> buscarEstudiante(@PathVariable Long id){
 		Estudiante estudiante = estService.searchEst(id);
+		return new ResponseEntity<>(estudiante, HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "estudiante/actualizar/{id}")
+	public ResponseEntity<Estudiante> actualizarEstudiante(@PathVariable Long id, @RequestBody EstudianteRequest payload){
+		Estudiante estudiante = estService.actualizarEstudiante(id, payload);
+		return new ResponseEntity<>(estudiante, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "estudiante/eliminar/{id}")
+	public ResponseEntity<Estudiante> eliminarEstudiante(@PathVariable Long id, @RequestBody EstudianteRequest payload){
+		Estudiante estudiante = estService.eliminarEstudiante(id, payload);
 		return new ResponseEntity<>(estudiante, HttpStatus.OK);
 	}
 	

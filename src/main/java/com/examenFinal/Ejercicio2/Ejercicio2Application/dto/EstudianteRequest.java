@@ -22,5 +22,7 @@ public class EstudianteRequest {
 	@ApiModelProperty(  notes = "correo del estudiante", example = "pepito@gmail.com")
 	private String correo;
 	
+	private boolean estado;
+	
 	private List<AcudienteRequest> acudiente;
 }

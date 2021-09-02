@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -40,10 +41,11 @@ public class Estudiante {
 	@Column(name = "edad")
 	private int edad;
 	
-	@Column(name = "Estado_Estudiante")
-	private boolean estadoActivo;
+	@Column(name = "estado")
+	private boolean estado;
 	
-
+	
 	@OneToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "estudiante")
 	private List<Acudiente> acudiente;
+	
 }
